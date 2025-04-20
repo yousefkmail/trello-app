@@ -21,7 +21,7 @@ export default function AddCardPopup({
 }: Partial<AddCardPopupProps>) {
   return (
     <AnimatedPopup isShown={isShown}>
-      <Card>
+      <Card className="p-0">
         <CardContent className="p-6 space-y-4">
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-semibold">{popupTitle}</h2>
