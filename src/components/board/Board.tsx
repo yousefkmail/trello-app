@@ -4,6 +4,10 @@ import { useBoardStore } from "../../stores/useBoardStore";
 import { Column } from "./Column";
 import { Button } from "@/components/ui/button";
 import {
+  horizontalListSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
+import {
   DndContext,
   DragEndEvent,
   PointerSensor,
@@ -11,7 +15,9 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import AddColumnPopup from "./AddColumnPopup";
+
 import { ConfirmDialog } from "../utils/ConfirmDialog";
+
 export const Board = () => {
   const {
     boards,
@@ -65,18 +71,16 @@ export const Board = () => {
         />
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div className="flex gap-4 overflow-visible pb-2">
         <DndContext
           sensors={sensors}
           onDragEnd={(event: DragEndEvent) => {
             if (
               event.active.data.current?.type === "card" &&
               event.over?.data.current?.type === "column"
-            )
-              moveCard(
-                event.active.data.current?.cardId,
-                event.over.data.current?.columnId
-              );
+            ) {
+              moveCard(event.active.id.toString(), event.over.id.toString());
+            }
             if (
               event.active.data.current?.type === "column" &&
               event.over?.data.current?.type === "column" &&
@@ -88,16 +92,21 @@ export const Board = () => {
               const overIndex = boardColumns.findIndex(
                 (c) => c.id === event.over?.id
               );
-
               if (activeIndex !== -1 && overIndex !== -1) {
                 moveColumn(event.active.id as string, overIndex);
               }
             }
           }}
+          onDragMove={(e) => console.log(e.over)}
         >
-          {boardColumns.map((column) => (
-            <Column key={column.id} column={column} />
-          ))}
+          <SortableContext
+            items={boardColumns.map((c) => c.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            {boardColumns.map((column) => (
+              <Column key={column.id} column={column} />
+            ))}
+          </SortableContext>
         </DndContext>
 
         <Button

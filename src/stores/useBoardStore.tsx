@@ -101,6 +101,7 @@ export const useBoardStore = create<BoardStore>()(
       },
 
       moveCard: (cardId: string, newColumnId: string) => {
+        console.log(newColumnId);
         set((state) => ({
           cards: state.cards.map((card) =>
             card.id === cardId ? { ...card, columnId: newColumnId } : card

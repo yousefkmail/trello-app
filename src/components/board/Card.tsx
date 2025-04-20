@@ -1,5 +1,5 @@
-// src/components/Board/Card.tsx
-import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Card as Cardd } from "../../types/types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -7,38 +7,53 @@ import AddCardPopup from "./AddCardPopup";
 import { useState } from "react";
 import { useBoardStore } from "@/stores/useBoardStore";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
+
 export const Card = ({ card }: { card: Cardd }) => {
-  const { attributes, listeners, setNodeRef } = useDraggable({
+  const { updatedCard, deleteCard } = useBoardStore();
+  const [updateCardPopupOpened, setUpdateCardPopupOpened] = useState(false);
+  const [deleteCardPopup, setDeleteCardPopup] = useState(false);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: card.id,
     data: {
       type: "card",
       cardId: card.id,
+      columnId: card.columnId,
     },
   });
 
-  const { updatedCard, deleteCard } = useBoardStore();
-  const [updateCardPopupOpened, setUpdateCardPopupOpened] =
-    useState<boolean>(false);
-  const [deleteCardPopup, setDeleteCardPopup] = useState<boolean>(false);
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   return (
     <div
       ref={setNodeRef}
+      style={style}
       {...attributes}
       {...listeners}
-      className={`p-3 bg-white rounded shadow cursor-pointer group`}
+      className="p-3 bg-white rounded shadow cursor-pointer group"
     >
-      <div className="flex justify-between items-center ">
+      <div className="flex justify-between items-center">
         <h3 className="font-medium overflow-hidden">{card.title}</h3>
         <div>
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 border-box p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={() => setDeleteCardPopup(true)}
           >
             <FontAwesomeIcon icon={faTrash} />
           </div>
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 border-box p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
             onClick={() => setUpdateCardPopupOpened(true)}
           >
             <FontAwesomeIcon icon={faPencil} />
@@ -52,23 +67,19 @@ export const Card = ({ card }: { card: Cardd }) => {
 
       <AddCardPopup
         isShown={updateCardPopupOpened}
-        onClose={() => {
-          setUpdateCardPopupOpened(false);
-        }}
+        onClose={() => setUpdateCardPopupOpened(false)}
         titleInitialValue={card.title}
         descriptionInitialValue={card.description}
         popupTitle="Update card"
         onAddCard={(title, description) => {
-          updatedCard(card.id, { description, title });
+          updatedCard(card.id, { title, description });
           setUpdateCardPopupOpened(false);
         }}
       />
 
       <ConfirmDialog
         open={deleteCardPopup}
-        onConfirm={() => {
-          deleteCard(card.id);
-        }}
+        onConfirm={() => deleteCard(card.id)}
         onCancel={() => setDeleteCardPopup(false)}
         title="Delete this Card?"
         description="Once deleted, this card cannot be recovered."

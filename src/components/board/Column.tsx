@@ -3,13 +3,15 @@ import { Card } from "./Card";
 import { Column as Columnn } from "../../types/types";
 import { Button } from "@/components/ui/button";
 
-import { useDraggable, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import { useState } from "react";
 import AddCardPopup from "./AddCardPopup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import AddColumnPopup from "./AddColumnPopup";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 export const Column = ({ column }: { column: Columnn }) => {
   const [addCardPopupOpened, setAddCardPopupOpened] = useState<boolean>(false);
@@ -20,17 +22,6 @@ export const Column = ({ column }: { column: Columnn }) => {
   const [updateColumnPopupOpened, setUpdateColumnPopupOpened] =
     useState<boolean>(false);
 
-  const {
-    attributes,
-    listeners,
-    setNodeRef: setDraggableRef,
-  } = useDraggable({
-    id: column.id,
-    data: {
-      type: "column",
-    },
-  });
-
   const { setNodeRef: setDroppableRef } = useDroppable({
     id: column.id,
     data: {
@@ -40,16 +31,38 @@ export const Column = ({ column }: { column: Columnn }) => {
     },
   });
 
+  const {
+    attributes,
+    listeners,
+    setNodeRef: setSortableRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: column.id,
+    data: {
+      type: "column",
+    },
+  });
+
   const setNodeRef = (node: HTMLElement | null) => {
-    setDraggableRef(node);
+    setSortableRef(node);
     setDroppableRef(node);
   };
 
   const [deleteColumnPopup, setDeleteColumnPopup] = useState<boolean>(false);
 
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : "auto",
+  };
+
   return (
     <div>
       <div
+        style={style}
         ref={setNodeRef}
         {...attributes}
         {...listeners}
