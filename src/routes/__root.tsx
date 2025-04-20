@@ -10,7 +10,7 @@ export const Route = createRootRoute({
           <Sidebar />
         </div>
 
-        <div className="flex-1 p-4 overflow-auto">
+        <div className="flex-1 p-4 overflow-hidden">
           <Outlet />
           <TanStackRouterDevtools />
         </div>

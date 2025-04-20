@@ -72,7 +72,7 @@ export const Board = () => {
         />
       </div>
 
-      <div className="flex gap-4 overflow-visible pb-2">
+      <div className="flex gap-4 pb-2 overflow-visible">
         <DndContext
           sensors={sensors}
           collisionDetection={xAxisCollisionDetection}
