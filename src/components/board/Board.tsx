@@ -17,6 +17,7 @@ import {
 import AddColumnPopup from "./AddColumnPopup";
 
 import { ConfirmDialog } from "../utils/ConfirmDialog";
+import { xAxisCollisionDetection } from "@/XAxisCollisionDetection";
 
 export const Board = () => {
   const {
@@ -74,6 +75,7 @@ export const Board = () => {
       <div className="flex gap-4 overflow-visible pb-2">
         <DndContext
           sensors={sensors}
+          collisionDetection={xAxisCollisionDetection}
           onDragEnd={(event: DragEndEvent) => {
             if (
               event.active.data.current?.type === "card" &&

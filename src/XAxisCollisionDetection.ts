@@ -4,27 +4,38 @@ export const xAxisCollisionDetection: CollisionDetection = ({
   droppableContainers,
   collisionRect,
 }) => {
-  const collisions: Collision[] = [];
-
-  const centerX = (collisionRect.left + collisionRect.right) / 2;
+  let bestMatch: Collision | null = null;
+  let maxOverlap = 0;
 
   for (const droppable of droppableContainers) {
-    const rect = droppable.rect.current;
-    if (!rect) continue;
+    const rect = droppable.rect;
+    if (!rect.current) continue;
 
-    const xWithinBounds = centerX >= rect.left && centerX <= rect.right;
+    const containerRect = rect.current;
+    const itemLeft = collisionRect.left;
+    const itemRight = collisionRect.right;
+    const containerLeft = containerRect.left;
+    const containerRight = containerRect.right;
 
-    if (xWithinBounds) {
-      const deltaX = Math.abs(centerX - (rect.left + rect.width / 2));
-      collisions.push({
-        id: droppable.id,
-        data: { delta: deltaX },
-      });
+    const overlapLeft =
+      Math.min(itemRight, containerRight) - Math.max(itemLeft, containerLeft);
+    const overlapRight =
+      Math.min(itemRight, containerRight) - Math.max(itemLeft, containerLeft);
+
+    const overlap = Math.max(overlapLeft, overlapRight);
+
+    if (overlap > 0) {
+      const overlapPercentage = overlap / collisionRect.width;
+
+      if (overlapPercentage > maxOverlap) {
+        maxOverlap = overlapPercentage;
+        bestMatch = {
+          id: droppable.id,
+          data: { droppableContainer: droppable },
+        };
+      }
     }
   }
 
-  // Sort by closeness to center X, optional
-  collisions.sort((a, b) => (a.data?.delta ?? 0) - (b.data?.delta ?? 0));
-
-  return collisions;
+  return bestMatch ? [bestMatch] : [];
 };
