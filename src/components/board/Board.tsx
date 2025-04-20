@@ -24,23 +24,6 @@ export const Board = () => {
     removeBoard,
   } = useBoardStore();
 
-  // const { syncState } = useSyncTabs();
-
-  // useEffect(() => {
-  //   // Correct way to subscribe in newer Zustand versions
-  //   const unsubscribe = useBoardStore.subscribe((_state) => {
-  //     // Get the current state and sync it
-  //     const currentState = useBoardStore.getState();
-  //     syncState(currentState);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [syncState]);
-
-  if (!currentBoardId) {
-    return <></>;
-  }
-
   const currentBoard = boards.find((b) => b.id === currentBoardId);
   const boardColumns = columns.filter((col) => col.boardId === currentBoardId);
 
@@ -50,6 +33,7 @@ export const Board = () => {
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
 
   const handleDelete = () => {
+    if (!currentBoardId) return;
     removeBoard(currentBoardId);
     setShowConfirm(false);
   };
@@ -61,6 +45,10 @@ export const Board = () => {
       },
     })
   );
+
+  if (!currentBoardId) {
+    return <></>;
+  }
 
   return (
     <div className="p-4">
