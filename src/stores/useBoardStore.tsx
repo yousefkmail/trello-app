@@ -10,7 +10,6 @@ export const useBoardStore = create<BoardStore>()(
       cards: [],
       currentBoardId: null,
 
-      // Board actions
       addBoard: (title: string) => {
         const newBoard: Board = {
           id: crypto.randomUUID(),
@@ -26,7 +25,6 @@ export const useBoardStore = create<BoardStore>()(
         set({ currentBoardId: id });
       },
 
-      // Column actions
       addColumn: (title: string) => {
         const { currentBoardId } = get();
         if (!currentBoardId) return;
@@ -39,6 +37,43 @@ export const useBoardStore = create<BoardStore>()(
         set((state) => ({
           columns: [...state.columns, newColumn],
         }));
+      },
+
+      updateColumn: (columnId: string, column: Partial<Column>) => {
+        set((state) => {
+          return {
+            columns: state.columns.map((oldColumn) =>
+              oldColumn.id === columnId
+                ? { ...oldColumn, ...column }
+                : oldColumn
+            ),
+          };
+        });
+      },
+
+      deleteColumn: (columnId: string) => {
+        set((state) => {
+          return {
+            columns: state.columns.filter((column) => column.id !== columnId),
+          };
+        });
+      },
+      updatedCard: (cardId: string, card: Partial<Card>) => {
+        set((state) => {
+          return {
+            cards: state.cards.map((oldCard) =>
+              oldCard.id === cardId ? { ...oldCard, ...card } : oldCard
+            ),
+          };
+        });
+      },
+
+      deleteCard: (cardId: string) => {
+        set((state) => {
+          return {
+            cards: state.cards.filter((card) => card.id !== cardId),
+          };
+        });
       },
       removeBoard: (boardId: string) => {
         set((state) => {

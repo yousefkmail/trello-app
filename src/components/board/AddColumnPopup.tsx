@@ -7,19 +7,23 @@ import { AnimatedPopup, AnimatedPopupProps } from "../animation/AnimatedPopup";
 interface AddColumnPopupProps extends AnimatedPopupProps {
   onClose: () => void;
   onAddColumn: (name: string) => void;
+  popupTitle: string;
+  initialColumnName: string;
 }
 
 export default function AddColumnPopup({
   isShown = true,
   onClose,
   onAddColumn,
+  initialColumnName,
+  popupTitle = "Add a new column",
 }: Partial<AddColumnPopupProps>) {
   return (
     <AnimatedPopup isShown={isShown}>
       <Card>
         <CardContent className="p-6 space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Add a new column</h2>
+            <h2 className="text-xl font-semibold">{popupTitle}</h2>
             <Button variant="ghost" onClick={onClose}>
               Close
             </Button>
@@ -28,16 +32,20 @@ export default function AddColumnPopup({
             onSubmit={(e: FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              console.log(formData.get("name"));
               const name = formData.get("name");
               if (!name) return;
               onAddColumn?.(name.toString());
             }}
             className="space-y-4"
           >
-            <Input name="name" type="text" placeholder="Column name" />
+            <Input
+              defaultValue={initialColumnName}
+              name="name"
+              type="text"
+              placeholder="Column name."
+            />
             <Button type="submit" className="w-full">
-              Add Column
+              Confirm
             </Button>
           </form>
         </CardContent>

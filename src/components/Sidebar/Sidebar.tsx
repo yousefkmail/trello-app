@@ -9,7 +9,7 @@ export default function Sidebar() {
     useState<boolean>(false);
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Select or Create a Board</h1>
+      <h1 className="text-2xl font-bold mb-4">Select or create a board</h1>
 
       <div className="flex flex-col gap-2">
         {boards.map((board) => (

@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { useBoardStore } from "../../stores/useBoardStore";
 import { Column } from "./Column";
-
 import { Button } from "@/components/ui/button";
 import {
   DndContext,

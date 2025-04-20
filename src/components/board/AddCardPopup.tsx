@@ -44,7 +44,7 @@ export default function AddCardPopup({
               defaultValue={titleInitialValue}
               name="title"
               type="text"
-              placeholder="Title"
+              placeholder="Title."
             />
             <Input
               defaultValue={descriptionInitialValue}
