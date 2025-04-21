@@ -42,19 +42,19 @@ export const Card = ({ card }: { card: CardModel }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="p-3 bg-white rounded shadow cursor-pointer group"
+      className="p-3 bg-white rounded shadow cursor-move group overflow-hidden"
     >
       <div className="flex justify-between items-center">
         <h3 className="font-medium overflow-hidden">{card.title}</h3>
         <div>
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 text-destructive  transition-opacity"
             onClick={() => setDeleteCardPopup(true)}
           >
             <FontAwesomeIcon icon={faTrash} />
           </div>
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 text-accent transition-opacity"
             onClick={() => setUpdateCardPopupOpened(true)}
           >
             <FontAwesomeIcon icon={faPencil} />

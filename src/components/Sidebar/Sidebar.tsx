@@ -30,10 +30,10 @@ export default function CustomSidebar() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-6 w-6 text-muted-foreground hover:text-primary"
+              className="h-6 w-6 text-green-800  hover:text-primary hover:bg-transparent"
               onClick={() => setAddBoardPopupOpened(true)}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-4 w-4 " />
             </Button>
           </div>
 
@@ -56,26 +56,14 @@ export default function CustomSidebar() {
           </div>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter className="p-4 border-t">
-        <Button
-          variant="default"
-          size="sm"
-          className="w-full gap-2"
-          onClick={() => setAddBoardPopupOpened(true)}
-        >
-          <Plus className="h-4 w-4" />
-          Create Board
-        </Button>
-
-        <AddBoardPopup
-          isShown={addBoardPopupOpened}
-          onClose={() => setAddBoardPopupOpened(false)}
-          onCreateBoard={(boardName) => {
-            addBoard(boardName);
-            setAddBoardPopupOpened(false);
-          }}
-        />
-      </SidebarFooter>
+      <AddBoardPopup
+        isShown={addBoardPopupOpened}
+        onClose={() => setAddBoardPopupOpened(false)}
+        onCreateBoard={(boardName) => {
+          addBoard(boardName);
+          setAddBoardPopupOpened(false);
+        }}
+      />
     </Sidebar>
   );
 }

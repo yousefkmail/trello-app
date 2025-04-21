@@ -9,7 +9,6 @@ import {
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -19,7 +18,6 @@ import AddColumnPopup from "./AddColumnPopup";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { xAxisCollisionDetection } from "@/lib/dnd-kit/XAxisCollisionDetection";
 import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
-import { Card } from "@/types/Card";
 
 export const Board = () => {
   const { boards, columns, currentBoardId, moveColumn, removeBoard } =
@@ -54,14 +52,6 @@ export const Board = () => {
 
   const { undo } = useBoardStoreCommand();
 
-  interface CardDropFeedbackProps {
-    columnId: string;
-    card: Card;
-  }
-
-  const [cardDropFeedback, setCardDropFeedback] =
-    useState<CardDropFeedbackProps | null>(null);
-
   if (!currentBoardId) {
     return <></>;
   }
@@ -69,16 +59,29 @@ export const Board = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4">
-          {currentBoard?.title}
-        </h1>
+        <div className="mb-4">
+          <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4">
+            {currentBoard?.title}
+          </h1>
+          <div>
+            <Button
+              onClick={() => setAddColumnPopupOpened(true)}
+              className="h-fit min-w-[200px] mr-3 mb-3"
+            >
+              + Add Column
+            </Button>
+            <Button onClick={() => undo()}>Undo</Button>
+          </div>
+        </div>
+
         <div>
           <div className="mb-2">
-            <Button onClick={() => setShowConfirm(true)}>Delete Board</Button>
-          </div>
-
-          <div>
-            <Button onClick={() => undo()}>Undo</Button>
+            <Button
+              variant={"destructive"}
+              onClick={() => setShowConfirm(true)}
+            >
+              Delete Board
+            </Button>
           </div>
         </div>
 
@@ -96,23 +99,7 @@ export const Board = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={xAxisCollisionDetection}
-          onDragOver={(event: DragOverEvent) => {
-            if (
-              event.active.data.current?.type === "card" &&
-              event.over?.data.current?.type === "column" &&
-              event.active.data.current?.columnId !== event.over?.id
-            ) {
-              const card = event.active.data.current?.card;
-              setCardDropFeedback({
-                columnId: event.over.id.toString(),
-                card,
-              });
-            } else {
-              setCardDropFeedback(null);
-            }
-          }}
           onDragEnd={(event: DragEndEvent) => {
-            setCardDropFeedback(null);
             if (
               event.active.data.current?.type === "card" &&
               event.over?.data.current?.type === "column"
@@ -145,25 +132,11 @@ export const Board = () => {
             strategy={horizontalListSortingStrategy}
           >
             {boardColumns.map((column) => (
-              <Column
-                cardDropFeedback={
-                  cardDropFeedback?.columnId === column.id
-                    ? cardDropFeedback.card
-                    : undefined
-                }
-                key={column.id}
-                column={column}
-              />
+              <Column key={column.id} column={column} />
             ))}
           </SortableContext>
         </DndContext>
 
-        <Button
-          onClick={() => setAddColumnPopupOpened(true)}
-          className="h-fit min-w-[200px]"
-        >
-          + Add Column
-        </Button>
         <AddColumnPopup
           isShown={addColumnPopupOpened}
           onClose={() => {

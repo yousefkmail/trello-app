@@ -68,25 +68,28 @@ export const Column = ({
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        className="w-64 p-3 bg-gray-100 rounded-lg flex flex-col gap-2 min-h-[200px] group"
+        className="w-64 p-3 bg-gray-100 rounded-lg flex flex-col gap-2 min-h-[200px] group relative cursor-move"
       >
         <div className="flex justify-between items-start ">
           <h2 className="font-semibold text-lg overflow-hidden">
             {column.title}
           </h2>
-          <div className="min-w-12">
-            <div
-              className="inline-flex cursor-pointer hover:bg-gray-300 border-box p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+
+          <div className="min-w-12 flex gap-2">
+            <Button
+              variant={"destructive"}
               onClick={() => setDeleteColumnPopup(true)}
+              className=""
             >
-              <FontAwesomeIcon icon={faTrash} />
-            </div>
-            <div
-              className="inline-flex cursor-pointer hover:bg-gray-300 border-box p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+              <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
+            </Button>
+            <Button
+              variant={"ghost"}
               onClick={() => setUpdateColumnPopupOpened(true)}
+              className="text-white bg-accent"
             >
-              <FontAwesomeIcon icon={faPencil} />
-            </div>
+              <FontAwesomeIcon icon={faPencil} className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -94,9 +97,7 @@ export const Column = ({
           {columnCards.map((card) => (
             <Card key={card.id} card={card} />
           ))}
-          {cardDropFeedback && (
-            <Card key={cardDropFeedback.id} card={cardDropFeedback} />
-          )}
+          {cardDropFeedback && <Card card={cardDropFeedback} />}
         </div>
         <Button
           onClick={() => {

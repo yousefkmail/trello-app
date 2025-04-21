@@ -36,7 +36,7 @@ export default function AddBoardPopup({
           >
             <Input name="name" type="text" placeholder="Name" />
             <Button type="submit" className="w-full">
-              Create
+              Confirm
             </Button>
           </form>
         </CardContent>
