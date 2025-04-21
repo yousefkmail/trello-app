@@ -28,7 +28,6 @@ export default function AddBoardPopup({
             onSubmit={(e: FormEvent<HTMLFormElement>) => {
               e.preventDefault();
               const formData = new FormData(e.currentTarget);
-              console.log(formData.get("name"));
               const name = formData.get("name");
               if (!name) return;
               onCreateBoard?.(name.toString());

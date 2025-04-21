@@ -71,10 +71,7 @@ export const Column = ({
         className="w-64 p-3 bg-gray-100 rounded-lg flex flex-col gap-2 min-h-[200px] group"
       >
         <div className="flex justify-between items-start ">
-          <h2
-            onClick={() => console.log("hey")}
-            className="font-semibold text-lg overflow-hidden"
-          >
+          <h2 className="font-semibold text-lg overflow-hidden">
             {column.title}
           </h2>
           <div className="min-w-12">

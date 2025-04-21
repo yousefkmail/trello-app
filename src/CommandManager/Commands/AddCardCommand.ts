@@ -18,7 +18,6 @@ export function AddCardCommand(
         columnId,
         description,
       };
-      console.log(card);
       store.setState((state) => ({
         cards: [...state.cards, card],
       }));

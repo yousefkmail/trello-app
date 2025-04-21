@@ -13,7 +13,6 @@ export const useBroadcastSync = () => {
     const channel = new BroadcastChannel(CHANNEL_NAME);
 
     channel.onmessage = (event) => {
-      console.log("Changes received");
       const { type, payload, origin } = event.data;
 
       if (type === "STATE_UPDATE" && origin !== tabIdRef.current) {

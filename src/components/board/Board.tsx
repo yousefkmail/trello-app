@@ -9,6 +9,7 @@ import {
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -32,7 +33,6 @@ export const Board = () => {
   const boardColumns = columns
     .filter((col) => col.boardId === currentBoardId)
     .sort((item1, item2) => item1.index - item2.index);
-  console.log(boardColumns);
   const [addColumnPopupOpened, setAddColumnPopupOpened] =
     useState<boolean>(false);
 
@@ -92,33 +92,31 @@ export const Board = () => {
           cancelText="Cancel"
         />
       </div>
-
       <div className="flex gap-4 pb-2 overflow-visible">
         <DndContext
           sensors={sensors}
           collisionDetection={xAxisCollisionDetection}
-          // onDragOver={(event: DragOverEvent) => {
-          //   if (
-          //     event.active.data.current?.type === "card" &&
-          //     event.over?.data.current?.type === "column" &&
-          //     event.active.data.current?.columnId !== event.over?.id
-          //   ) {
-          //     const card = event.active.data.current?.card;
-          //     setCardDropFeedback({
-          //       columnId: event.over.id.toString(),
-          //       card,
-          //     });
-          //   } else {
-          //     setCardDropFeedback(null);
-          //   }
-          // }}
+          onDragOver={(event: DragOverEvent) => {
+            if (
+              event.active.data.current?.type === "card" &&
+              event.over?.data.current?.type === "column" &&
+              event.active.data.current?.columnId !== event.over?.id
+            ) {
+              const card = event.active.data.current?.card;
+              setCardDropFeedback({
+                columnId: event.over.id.toString(),
+                card,
+              });
+            } else {
+              setCardDropFeedback(null);
+            }
+          }}
           onDragEnd={(event: DragEndEvent) => {
             setCardDropFeedback(null);
             if (
               event.active.data.current?.type === "card" &&
               event.over?.data.current?.type === "column"
             ) {
-              console.log("moving");
               moveCard(
                 event.active.data.current.card,
                 event.over.id.toString()

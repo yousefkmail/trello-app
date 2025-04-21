@@ -1,20 +1,16 @@
-import Sidebar from "@/components/Sidebar/Sidebar";
+import CustomSidebar from "@/components/Sidebar/Sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
 export const Route = createRootRoute({
   component: () => (
-    <>
-      <div className="flex h-screen">
-        <div className="w-64 bg-gray-100 p-4">
-          <Sidebar />
-        </div>
-
-        <div className="flex-1 p-4 overflow-hidden">
-          <Outlet />
-          <TanStackRouterDevtools />
-        </div>
+    <SidebarProvider>
+      <CustomSidebar />
+      <div className="flex-1 overflow-hidden">
+        <Outlet />
+        <TanStackRouterDevtools />
       </div>
-    </>
+    </SidebarProvider>
   ),
 });

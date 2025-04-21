@@ -11,7 +11,6 @@ export function MoveCardCommand(
   let oldColumnId: string | null = null;
   return {
     do: () => {
-      console.log("Executing");
       oldColumnId = card.columnId;
       store.getState().moveCard(card.id, newColumnId);
     },
