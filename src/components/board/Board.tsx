@@ -90,7 +90,6 @@ export const Board = () => {
           onConfirm={handleDelete}
           onCancel={() => setShowConfirm(false)}
           title="Delete this board?"
-          description="Once deleted, this board cannot be recovered."
           confirmText="Delete"
           cancelText="Cancel"
         />

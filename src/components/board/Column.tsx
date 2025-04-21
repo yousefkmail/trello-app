@@ -12,6 +12,7 @@ import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
+import { Card as ShadcnCard } from "../ui/card";
 
 export const Column = ({
   column,
@@ -63,14 +64,16 @@ export const Column = ({
 
   return (
     <div>
-      <div
+      <ShadcnCard
         style={style}
         ref={setNodeRef}
-        {...attributes}
-        {...listeners}
-        className="w-64 p-3 bg-background dark:bg-muted rounded-lg flex flex-col gap-2 min-h-[200px] group relative cursor-move border border-border"
+        className="w-64 p-3 rounded-lg flex flex-col gap-2 min-h-[200px] group relative"
       >
-        <div className="flex justify-between items-start">
+        <div
+          {...attributes}
+          {...listeners}
+          className="flex justify-between items-start cursor-move"
+        >
           <h2 className="font-semibold text-lg overflow-hidden text-foreground">
             {column.title}
           </h2>
@@ -106,7 +109,7 @@ export const Column = ({
         >
           + Add Card
         </Button>
-      </div>
+      </ShadcnCard>
 
       <AddCardPopup
         isShown={addCardPopupOpened}
@@ -135,7 +138,6 @@ export const Column = ({
         }}
         onCancel={() => setDeleteColumnPopup(false)}
         title="Delete this column?"
-        description="Once deleted, this column cannot be recovered."
         confirmText="Delete"
         cancelText="Cancel"
       />

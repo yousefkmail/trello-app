@@ -7,7 +7,6 @@ import AddCardPopup from "./AddCardPopup";
 import { useState } from "react";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
-
 export const Card = ({ card }: { card: CardModel }) => {
   const { updateCard, deleteCard } = useBoardStoreCommand();
   const [updateCardPopupOpened, setUpdateCardPopupOpened] = useState(false);
@@ -37,37 +36,38 @@ export const Card = ({ card }: { card: CardModel }) => {
   };
 
   return (
-    <div
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      {...listeners}
-      className="p-3 bg-card rounded shadow cursor-move group overflow-hidden border border-border transition-colors"
-    >
-      <div className="flex justify-between items-center">
-        <h3 className="font-medium text-foreground overflow-hidden">
-          {card.title}
-        </h3>
-        <div className="flex gap-1">
-          <div
-            className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-destructive transition-opacity"
-            onClick={() => setDeleteCardPopup(true)}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </div>
-          <div
-            className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-accent-foreground transition-opacity"
-            onClick={() => setUpdateCardPopupOpened(true)}
-          >
-            <FontAwesomeIcon icon={faPencil} />
+    <div>
+      <div
+        ref={setNodeRef}
+        style={style}
+        {...attributes}
+        {...listeners}
+        className="p-3  rounded shadow cursor-move group overflow-hidden border transition-colors bg-background"
+      >
+        <div className="flex justify-between items-center">
+          <h3 className="font-medium text-foreground overflow-hidden">
+            {card.title}
+          </h3>
+          <div className="flex gap-1">
+            <div
+              className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-destructive transition-opacity"
+              onClick={() => setDeleteCardPopup(true)}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </div>
+            <div
+              className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-accent transition-opacity"
+              onClick={() => setUpdateCardPopupOpened(true)}
+            >
+              <FontAwesomeIcon icon={faPencil} />
+            </div>
           </div>
         </div>
+
+        {card.description && (
+          <p className="text-sm text-muted-foreground">{card.description}</p>
+        )}
       </div>
-
-      {card.description && (
-        <p className="text-sm text-muted-foreground">{card.description}</p>
-      )}
-
       <AddCardPopup
         isShown={updateCardPopupOpened}
         onClose={() => setUpdateCardPopupOpened(false)}
@@ -84,13 +84,11 @@ export const Card = ({ card }: { card: CardModel }) => {
           setUpdateCardPopupOpened(false);
         }}
       />
-
       <ConfirmDialog
         open={deleteCardPopup}
         onConfirm={() => deleteCard(card)}
         onCancel={() => setDeleteCardPopup(false)}
         title="Delete this Card?"
-        description="Once deleted, this card cannot be recovered."
         confirmText="Delete"
         cancelText="Cancel"
       />

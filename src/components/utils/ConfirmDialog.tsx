@@ -21,7 +21,7 @@ interface ConfirmDialogProps {
 export const ConfirmDialog = ({
   open,
   title = "Are you sure?",
-  description = "This action cannot be undone.",
+  description = "",
   confirmText = "Confirm",
   cancelText = "Cancel",
   onConfirm,
@@ -31,11 +31,15 @@ export const ConfirmDialog = ({
     <Dialog open={open} onOpenChange={onCancel}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
+          <DialogTitle className="text-foreground">{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex justify-end gap-2">
-          <Button variant="outline" onClick={onCancel}>
+          <Button
+            className="text-foreground"
+            variant="outline"
+            onClick={onCancel}
+          >
             {cancelText}
           </Button>
           <Button variant="destructive" onClick={onConfirm}>
