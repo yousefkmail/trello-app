@@ -21,15 +21,12 @@ import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
 import { Card } from "@/types/Card";
 
 export const Board = () => {
-  const {
-    boards,
-    columns,
-    currentBoardId,
-    addColumn,
-    moveCard,
-    moveColumn,
-    removeBoard,
-  } = useBoardStore();
+  const { boards, columns, currentBoardId, moveColumn, removeBoard } =
+    useBoardStore();
+
+  const { addColumn } = useBoardStoreCommand();
+
+  const { moveCard } = useBoardStoreCommand();
 
   const currentBoard = boards.find((b) => b.id === currentBoardId);
   const boardColumns = columns
@@ -121,7 +118,11 @@ export const Board = () => {
               event.active.data.current?.type === "card" &&
               event.over?.data.current?.type === "column"
             ) {
-              moveCard(event.active.id.toString(), event.over.id.toString());
+              console.log("moving");
+              moveCard(
+                event.active.data.current.card,
+                event.over.id.toString()
+              );
             }
             if (
               event.active.data.current?.type === "column" &&

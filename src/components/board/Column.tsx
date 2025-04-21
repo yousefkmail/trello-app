@@ -11,6 +11,7 @@ import AddColumnPopup from "./AddColumnPopup";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
 
 export const Column = ({
   column,
@@ -21,7 +22,8 @@ export const Column = ({
 }) => {
   const [addCardPopupOpened, setAddCardPopupOpened] = useState<boolean>(false);
 
-  const { cards, addCard, updateColumn, deleteColumn } = useBoardStore();
+  const { cards, updateColumn, deleteColumn } = useBoardStore();
+  const { addCard } = useBoardStoreCommand();
   const columnCards = cards.filter((card) => card.columnId === column.id);
 
   const [updateColumnPopupOpened, setUpdateColumnPopupOpened] =
@@ -115,7 +117,7 @@ export const Column = ({
           setAddCardPopupOpened(false);
         }}
         onAddCard={(title, description) => {
-          addCard(column.id, title, description);
+          addCard(title, column.id, description);
           setAddCardPopupOpened(false);
         }}
       />

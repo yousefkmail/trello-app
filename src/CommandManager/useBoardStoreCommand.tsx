@@ -5,6 +5,9 @@ import { UpdateCardCommand } from "./Commands/UpdateCardCommand";
 import { Card } from "@/types/Card";
 import { Command } from "./Command";
 import { DeleteCardCommand } from "./Commands/DeleteCardCommand";
+import { MoveCardCommand } from "./Commands/MoveCardCommand";
+import { AddColumnCommand } from "./Commands/AddColumnCommand";
+import { AddCardCommand } from "./Commands/AddCardCommand";
 
 export const commandManager = new CommandManager();
 
@@ -21,6 +24,18 @@ export const useBoardStoreCommand = () => {
     ExecuteCommand(DeleteCardCommand(card, useBoardStore));
   };
 
+  const moveCard = (card: Card, columnId: string) => {
+    ExecuteCommand(MoveCardCommand(card, columnId, useBoardStore));
+  };
+
+  const addColumn = (title: string) => {
+    ExecuteCommand(AddColumnCommand(title, useBoardStore));
+  };
+
+  const addCard = (title: string, columnId: string, description?: string) => {
+    ExecuteCommand(AddCardCommand(title, columnId, useBoardStore, description));
+  };
+
   const ExecuteCommand = (command: Command) => {
     commandManager.execute(command);
   };
@@ -31,5 +46,8 @@ export const useBoardStoreCommand = () => {
     addBoard,
     updateCard,
     deleteCard,
+    moveCard,
+    addColumn,
+    addCard,
   };
 };
