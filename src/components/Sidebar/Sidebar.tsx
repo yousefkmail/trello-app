@@ -14,9 +14,10 @@ export default function Sidebar() {
       <div className="flex flex-col gap-2">
         {boards.map((board) => (
           <Button
-            variant={currentBoardId === board.id ? "destructive" : "ghost"}
+            variant={currentBoardId === board.id ? "outline" : "link"}
             key={board.id}
             onClick={() => setCurrentBoard(board.id)}
+            className="overflow-hidden"
           >
             {board.title}
           </Button>

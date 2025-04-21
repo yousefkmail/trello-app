@@ -10,6 +10,7 @@ import {
 import {
   DndContext,
   DragEndEvent,
+  DragOverEvent,
   PointerSensor,
   useSensor,
   useSensors,
@@ -18,6 +19,7 @@ import AddColumnPopup from "./AddColumnPopup";
 
 import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { xAxisCollisionDetection } from "@/XAxisCollisionDetection";
+import { Card } from "@/types/types";
 
 export const Board = () => {
   const {
@@ -52,6 +54,14 @@ export const Board = () => {
     })
   );
 
+  interface CardDropFeedbackProps {
+    columnId: string;
+    card: Card;
+  }
+
+  const [cardDropFeedback, setCardDropFeedback] =
+    useState<CardDropFeedbackProps | null>(null);
+
   if (!currentBoardId) {
     return <></>;
   }
@@ -59,8 +69,13 @@ export const Board = () => {
   return (
     <div className="p-4">
       <div className="flex justify-between">
-        <h1 className="text-2xl font-bold mb-4">{currentBoard?.title}</h1>
-        <Button onClick={() => setShowConfirm(true)}>Delete Board</Button>
+        <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4">
+          {currentBoard?.title}
+        </h1>
+        <div>
+          <Button onClick={() => setShowConfirm(true)}>Delete Board</Button>
+        </div>
+
         <ConfirmDialog
           open={showConfirm}
           onConfirm={handleDelete}
@@ -76,7 +91,27 @@ export const Board = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={xAxisCollisionDetection}
+          onDragOver={(event: DragOverEvent) => {
+            if (
+              event.active.data.current?.type === "card" &&
+              event.over?.data.current?.type === "column" &&
+              event.active.data.current?.columnId !== event.over?.id
+            ) {
+              setCardDropFeedback({
+                columnId: event.over.id.toString(),
+                card: {
+                  title: "hey",
+                  columnId: "",
+                  id: "",
+                  description: "heeey",
+                },
+              });
+            } else {
+              setCardDropFeedback(null);
+            }
+          }}
           onDragEnd={(event: DragEndEvent) => {
+            setCardDropFeedback(null);
             if (
               event.active.data.current?.type === "card" &&
               event.over?.data.current?.type === "column"
@@ -106,7 +141,15 @@ export const Board = () => {
             strategy={horizontalListSortingStrategy}
           >
             {boardColumns.map((column) => (
-              <Column key={column.id} column={column} />
+              <Column
+                cardDropFeedback={
+                  cardDropFeedback?.columnId === column.id
+                    ? cardDropFeedback.card
+                    : undefined
+                }
+                key={column.id}
+                column={column}
+              />
             ))}
           </SortableContext>
         </DndContext>

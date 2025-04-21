@@ -19,7 +19,7 @@ export default function AddBoardPopup({
       <Card className="p-0">
         <CardContent className="p-6 space-y-4">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold">Add a new board</h2>
+            <h2 className="text-xl font-semibold">New board</h2>
             <Button variant="ghost" onClick={onClose}>
               Close
             </Button>
@@ -37,7 +37,7 @@ export default function AddBoardPopup({
           >
             <Input name="name" type="text" placeholder="Name" />
             <Button type="submit" className="w-full">
-              Create Board
+              Create
             </Button>
           </form>
         </CardContent>

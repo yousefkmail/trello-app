@@ -15,7 +15,7 @@ export default function AddCardPopup({
   isShown,
   onClose,
   onAddCard,
-  popupTitle = "Add a new card",
+  popupTitle = "New Card",
   titleInitialValue,
   descriptionInitialValue,
 }: Partial<AddCardPopupProps>) {
@@ -44,7 +44,7 @@ export default function AddCardPopup({
               defaultValue={titleInitialValue}
               name="title"
               type="text"
-              placeholder="Title."
+              placeholder="Title"
             />
             <Input
               defaultValue={descriptionInitialValue}

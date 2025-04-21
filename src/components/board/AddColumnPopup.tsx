@@ -16,7 +16,7 @@ export default function AddColumnPopup({
   onClose,
   onAddColumn,
   initialColumnName,
-  popupTitle = "Add a new column",
+  popupTitle = "New Column",
 }: Partial<AddColumnPopupProps>) {
   return (
     <AnimatedPopup isShown={isShown}>

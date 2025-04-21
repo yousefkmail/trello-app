@@ -1,9 +1,7 @@
 import { useBoardStore } from "../../stores/useBoardStore";
 import { Card } from "./Card";
-import { Column as Columnn } from "../../types/types";
+import { Card as Cardd, Column as Columnn } from "../../types/types";
 import { Button } from "@/components/ui/button";
-
-import { useDroppable } from "@dnd-kit/core";
 import { useState } from "react";
 import AddCardPopup from "./AddCardPopup";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +11,13 @@ import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-export const Column = ({ column }: { column: Columnn }) => {
+export const Column = ({
+  column,
+  cardDropFeedback,
+}: {
+  column: Columnn;
+  cardDropFeedback?: Cardd;
+}) => {
   const [addCardPopupOpened, setAddCardPopupOpened] = useState<boolean>(false);
 
   const { cards, addCard, updateColumn, deleteColumn } = useBoardStore();
@@ -22,19 +26,10 @@ export const Column = ({ column }: { column: Columnn }) => {
   const [updateColumnPopupOpened, setUpdateColumnPopupOpened] =
     useState<boolean>(false);
 
-  const { setNodeRef: setDroppableRef } = useDroppable({
-    id: column.id,
-    data: {
-      type: "column",
-      accepts: ["card"],
-      columnId: column.id,
-    },
-  });
-
   const {
     attributes,
     listeners,
-    setNodeRef: setSortableRef,
+    setNodeRef,
     transform,
     transition,
     isDragging,
@@ -45,15 +40,19 @@ export const Column = ({ column }: { column: Columnn }) => {
     },
   });
 
-  const setNodeRef = (node: HTMLElement | null) => {
-    setSortableRef(node);
-    setDroppableRef(node);
-  };
+  const transformWithoutScale = transform
+    ? {
+        x: transform?.x,
+        y: transform?.y,
+        scaleX: 1,
+        scaleY: 1,
+      }
+    : null;
 
   const [deleteColumnPopup, setDeleteColumnPopup] = useState<boolean>(false);
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Transform.toString(transformWithoutScale),
     transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 50 : "auto",
@@ -95,6 +94,9 @@ export const Column = ({ column }: { column: Columnn }) => {
           {columnCards.map((card) => (
             <Card key={card.id} card={card} />
           ))}
+          {cardDropFeedback && (
+            <Card key={cardDropFeedback.id} card={cardDropFeedback} />
+          )}
         </div>
         <Button
           onClick={() => {
