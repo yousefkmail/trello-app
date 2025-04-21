@@ -1,10 +1,11 @@
-import { useBoardStore } from "@/stores/useBoardStore";
+import { useBoardStore } from "@/stores/boardStore/useBoardStore";
 import { Button } from "../ui/button";
 import { useState } from "react";
 import AddBoardPopup from "../board/AddBoardPopup";
 
 export default function Sidebar() {
-  const { addBoard, boards, setCurrentBoard, currentBoardId } = useBoardStore();
+  const { boards, setCurrentBoard, currentBoardId, addBoard } = useBoardStore();
+  // const { addBoard } = useBoardStoreCommand();
   const [addBoardPopupOpened, setAddBoardPopupOpened] =
     useState<boolean>(false);
   return (

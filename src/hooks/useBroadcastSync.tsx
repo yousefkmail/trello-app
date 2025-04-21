@@ -1,4 +1,4 @@
-import { useBoardStore } from "@/stores/useBoardStore";
+import { useBoardStore } from "@/stores/boardStore/useBoardStore";
 import { useEffect, useRef } from "react";
 
 const CHANNEL_NAME = "trello-clone-sync";

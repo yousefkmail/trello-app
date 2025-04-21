@@ -1,6 +1,7 @@
-import { useBoardStore } from "../../stores/useBoardStore";
+import { useBoardStore } from "../../stores/boardStore/useBoardStore";
 import { Card } from "./Card";
-import { Card as Cardd, Column as Columnn } from "../../types/types";
+import { Card as CardModel } from "@/types/Card";
+import { Column as ColumnModel } from "@/types/Column";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import AddCardPopup from "./AddCardPopup";
@@ -15,8 +16,8 @@ export const Column = ({
   column,
   cardDropFeedback,
 }: {
-  column: Columnn;
-  cardDropFeedback?: Cardd;
+  column: ColumnModel;
+  cardDropFeedback?: CardModel;
 }) => {
   const [addCardPopupOpened, setAddCardPopupOpened] = useState<boolean>(false);
 

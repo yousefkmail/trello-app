@@ -1,6 +1,5 @@
-// src/components/Board/Board.tsx
 import { useState } from "react";
-import { useBoardStore } from "../../stores/useBoardStore";
+import { useBoardStore } from "../../stores/boardStore/useBoardStore";
 import { Column } from "./Column";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,8 +17,9 @@ import {
 import AddColumnPopup from "./AddColumnPopup";
 
 import { ConfirmDialog } from "../utils/ConfirmDialog";
-import { xAxisCollisionDetection } from "@/XAxisCollisionDetection";
-import { Card } from "@/types/types";
+import { xAxisCollisionDetection } from "@/lib/dnd-kit/XAxisCollisionDetection";
+import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
+import { Card } from "@/types/Card";
 
 export const Board = () => {
   const {
@@ -54,6 +54,8 @@ export const Board = () => {
     })
   );
 
+  const { undo } = useBoardStoreCommand();
+
   interface CardDropFeedbackProps {
     columnId: string;
     card: Card;
@@ -73,7 +75,13 @@ export const Board = () => {
           {currentBoard?.title}
         </h1>
         <div>
-          <Button onClick={() => setShowConfirm(true)}>Delete Board</Button>
+          <div className="mb-2">
+            <Button onClick={() => setShowConfirm(true)}>Delete Board</Button>
+          </div>
+
+          <div>
+            <Button onClick={() => undo()}>Undo</Button>
+          </div>
         </div>
 
         <ConfirmDialog

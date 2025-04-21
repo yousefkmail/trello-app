@@ -1,15 +1,17 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Card as Cardd } from "../../types/types";
+import { Card as CardModel } from "@/types/Card";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import AddCardPopup from "./AddCardPopup";
 import { useState } from "react";
-import { useBoardStore } from "@/stores/useBoardStore";
+import { useBoardStore } from "@/stores/boardStore/useBoardStore";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
+import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
 
-export const Card = ({ card }: { card: Cardd }) => {
-  const { updatedCard, deleteCard } = useBoardStore();
+export const Card = ({ card }: { card: CardModel }) => {
+  const { deleteCard } = useBoardStore();
+  const { updateCard } = useBoardStoreCommand();
   const [updateCardPopupOpened, setUpdateCardPopupOpened] = useState(false);
   const [deleteCardPopup, setDeleteCardPopup] = useState(false);
 
@@ -72,7 +74,12 @@ export const Card = ({ card }: { card: Cardd }) => {
         descriptionInitialValue={card.description}
         popupTitle="Update card"
         onAddCard={(title, description) => {
-          updatedCard(card.id, { title, description });
+          updateCard({
+            id: card.id,
+            title,
+            description,
+            columnId: card.columnId,
+          });
           setUpdateCardPopupOpened(false);
         }}
       />

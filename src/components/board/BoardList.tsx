@@ -1,4 +1,4 @@
-import { useBoardStore } from "@/stores/useBoardStore";
+import { useBoardStore } from "@/stores/boardStore/useBoardStore";
 import { Button } from "@/components/ui/button";
 
 export default function BoardList() {

@@ -1,6 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { AppState, Board, Column, Card, BoardStore } from "../types/types";
+import { AppState, BoardStore } from "./Types/types";
+import { Board } from "@/types/Board";
+import { Column } from "@/types/Column";
+import { Card } from "@/types/Card";
 
 export const useBoardStore = create<BoardStore>()(
   persist(
