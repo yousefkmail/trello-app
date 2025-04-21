@@ -50,7 +50,7 @@ export default function AddCardPopup({
               defaultValue={descriptionInitialValue}
               name="description"
               type="text"
-              placeholder="Description."
+              placeholder="Description"
             />
             <Button type="submit" className="w-full">
               Confirm

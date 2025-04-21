@@ -42,7 +42,7 @@ export default function AddColumnPopup({
               defaultValue={initialColumnName}
               name="name"
               type="text"
-              placeholder="Column name."
+              placeholder="Name"
             />
             <Button type="submit" className="w-full">
               Confirm

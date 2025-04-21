@@ -35,7 +35,7 @@ export default function AddBoardPopup({
             }}
             className="space-y-4"
           >
-            <Input name="name" type="text" placeholder="Board name." />
+            <Input name="name" type="text" placeholder="Name" />
             <Button type="submit" className="w-full">
               Create Board
             </Button>

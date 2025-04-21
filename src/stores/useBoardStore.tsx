@@ -119,24 +119,21 @@ export const useBoardStore = create<BoardStore>()(
         });
       },
 
-      __syncState: (state: AppState) => {
-        set(state);
+      __syncState: (_state: AppState) => {
+        set((state) => {
+          return {
+            ..._state,
+            currentBoardId: _state.boards.find(
+              (board) => board.id === state.currentBoardId
+            )
+              ? state.currentBoardId
+              : null,
+          };
+        });
       },
     }),
     {
       name: "trello-clone-storage",
-      onRehydrateStorage: () => (state) => {
-        if (state) {
-          state.__syncState = (newState: AppState) => {
-            const channel = new BroadcastChannel("trello-clone-sync");
-            channel.postMessage({
-              type: "STATE_UPDATE",
-              payload: newState,
-            });
-            channel.close();
-          };
-        }
-      },
     }
   )
 );
