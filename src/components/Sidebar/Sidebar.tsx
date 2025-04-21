@@ -5,7 +5,6 @@ import AddBoardPopup from "../board/AddBoardPopup";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
 } from "../ui/sidebar";

@@ -42,19 +42,21 @@ export const Card = ({ card }: { card: CardModel }) => {
       style={style}
       {...attributes}
       {...listeners}
-      className="p-3 bg-white rounded shadow cursor-move group overflow-hidden"
+      className="p-3 bg-card rounded shadow cursor-move group overflow-hidden border border-border transition-colors"
     >
       <div className="flex justify-between items-center">
-        <h3 className="font-medium overflow-hidden">{card.title}</h3>
-        <div>
+        <h3 className="font-medium text-foreground overflow-hidden">
+          {card.title}
+        </h3>
+        <div className="flex gap-1">
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 text-destructive  transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-destructive transition-opacity"
             onClick={() => setDeleteCardPopup(true)}
           >
             <FontAwesomeIcon icon={faTrash} />
           </div>
           <div
-            className="inline-flex cursor-pointer hover:bg-gray-300 p-1 rounded-full opacity-0 group-hover:opacity-100 text-accent transition-opacity"
+            className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full opacity-0 group-hover:opacity-100 text-accent-foreground transition-opacity"
             onClick={() => setUpdateCardPopupOpened(true)}
           >
             <FontAwesomeIcon icon={faPencil} />
@@ -63,7 +65,7 @@ export const Card = ({ card }: { card: CardModel }) => {
       </div>
 
       {card.description && (
-        <p className="text-sm text-gray-600">{card.description}</p>
+        <p className="text-sm text-muted-foreground">{card.description}</p>
       )}
 
       <AddCardPopup

@@ -60,7 +60,7 @@ export const Board = () => {
     <div className="p-4">
       <div className="flex justify-between">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4">
+          <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4 text-foreground">
             {currentBoard?.title}
           </h1>
           <div>

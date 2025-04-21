@@ -68,25 +68,25 @@ export const Column = ({
         ref={setNodeRef}
         {...attributes}
         {...listeners}
-        className="w-64 p-3 bg-gray-100 rounded-lg flex flex-col gap-2 min-h-[200px] group relative cursor-move"
+        className="w-64 p-3 bg-background dark:bg-muted rounded-lg flex flex-col gap-2 min-h-[200px] group relative cursor-move border border-border"
       >
-        <div className="flex justify-between items-start ">
-          <h2 className="font-semibold text-lg overflow-hidden">
+        <div className="flex justify-between items-start">
+          <h2 className="font-semibold text-lg overflow-hidden text-foreground">
             {column.title}
           </h2>
 
           <div className="min-w-12 flex gap-2">
             <Button
-              variant={"destructive"}
+              variant="destructive"
               onClick={() => setDeleteColumnPopup(true)}
-              className=""
+              className="h-8 w-8 p-0"
             >
               <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
             </Button>
             <Button
-              variant={"ghost"}
+              variant="ghost"
               onClick={() => setUpdateColumnPopupOpened(true)}
-              className="text-white bg-accent"
+              className="h-8 w-8 p-0 bg-primary text-white"
             >
               <FontAwesomeIcon icon={faPencil} className="h-4 w-4" />
             </Button>
@@ -100,25 +100,23 @@ export const Column = ({
           {cardDropFeedback && <Card card={cardDropFeedback} />}
         </div>
         <Button
-          onClick={() => {
-            setAddCardPopupOpened(true);
-          }}
-          className="justify-start"
-          variant={"outline"}
+          onClick={() => setAddCardPopupOpened(true)}
+          className="justify-start text-foreground border-border"
+          variant="outline"
         >
           + Add Card
         </Button>
       </div>
+
       <AddCardPopup
         isShown={addCardPopupOpened}
-        onClose={() => {
-          setAddCardPopupOpened(false);
-        }}
+        onClose={() => setAddCardPopupOpened(false)}
         onAddCard={(title, description) => {
           addCard(title, column.id, description);
           setAddCardPopupOpened(false);
         }}
       />
+
       <AddColumnPopup
         isShown={updateColumnPopupOpened}
         popupTitle="Update column."
