@@ -17,7 +17,7 @@ export interface ColumnActions {
 }
 
 export interface CardActions {
-  addCard: (columnId: string, title: string, description: string) => void;
+  addCard: (columnId: string, title: string, description?: string) => void;
   updatedCard: (cardId: string, card: Partial<Card>) => void;
   moveCard: (cardId: string, newColumnId: string) => void;
   deleteCard: (cardId: string) => void;

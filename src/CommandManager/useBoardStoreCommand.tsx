@@ -3,17 +3,25 @@ import { CommandManager } from "./CommandManager";
 import { AddBoardCommand } from "./Commands/AddBoardCommand";
 import { UpdateCardCommand } from "./Commands/UpdateCardCommand";
 import { Card } from "@/types/Card";
+import { Command } from "./Command";
+import { DeleteCardCommand } from "./Commands/DeleteCardCommand";
 
 export const commandManager = new CommandManager();
 
 export const useBoardStoreCommand = () => {
   const addBoard = (title: string) => {
-    const command = AddBoardCommand(title, useBoardStore);
-    commandManager.execute(command);
+    ExecuteCommand(AddBoardCommand(title, useBoardStore));
   };
 
   const updateCard = (card: Card) => {
-    const command = UpdateCardCommand(card, useBoardStore);
+    ExecuteCommand(UpdateCardCommand(card, useBoardStore));
+  };
+
+  const deleteCard = (card: Card) => {
+    ExecuteCommand(DeleteCardCommand(card, useBoardStore));
+  };
+
+  const ExecuteCommand = (command: Command) => {
     commandManager.execute(command);
   };
 
@@ -22,5 +30,6 @@ export const useBoardStoreCommand = () => {
     redo: () => commandManager.redo(),
     addBoard,
     updateCard,
+    deleteCard,
   };
 };

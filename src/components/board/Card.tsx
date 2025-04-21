@@ -5,13 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil, faTrash } from "@fortawesome/free-solid-svg-icons";
 import AddCardPopup from "./AddCardPopup";
 import { useState } from "react";
-import { useBoardStore } from "@/stores/boardStore/useBoardStore";
 import { ConfirmDialog } from "../utils/ConfirmDialog";
 import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
 
 export const Card = ({ card }: { card: CardModel }) => {
-  const { deleteCard } = useBoardStore();
-  const { updateCard } = useBoardStoreCommand();
+  const { updateCard, deleteCard } = useBoardStoreCommand();
   const [updateCardPopupOpened, setUpdateCardPopupOpened] = useState(false);
   const [deleteCardPopup, setDeleteCardPopup] = useState(false);
 
@@ -28,6 +26,7 @@ export const Card = ({ card }: { card: CardModel }) => {
       type: "card",
       cardId: card.id,
       columnId: card.columnId,
+      card,
     },
   });
 
@@ -86,7 +85,7 @@ export const Card = ({ card }: { card: CardModel }) => {
 
       <ConfirmDialog
         open={deleteCardPopup}
-        onConfirm={() => deleteCard(card.id)}
+        onConfirm={() => deleteCard(card)}
         onCancel={() => setDeleteCardPopup(false)}
         title="Delete this Card?"
         description="Once deleted, this card cannot be recovered."

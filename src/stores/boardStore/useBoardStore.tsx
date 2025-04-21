@@ -31,11 +31,14 @@ export const useBoardStore = create<BoardStore>()(
       addColumn: (title: string) => {
         const { currentBoardId } = get();
         if (!currentBoardId) return;
-
+        const index = get().columns.filter(
+          (item) => item.boardId === currentBoardId
+        ).length;
         const newColumn: Column = {
           id: crypto.randomUUID(),
           title,
           boardId: currentBoardId,
+          index,
         };
         set((state) => ({
           columns: [...state.columns, newColumn],
@@ -91,7 +94,7 @@ export const useBoardStore = create<BoardStore>()(
         });
       },
 
-      addCard: (columnId: string, title: string, description: string) => {
+      addCard: (columnId: string, title: string, description?: string) => {
         const newCard: Card = {
           id: crypto.randomUUID(),
           title,
@@ -113,15 +116,35 @@ export const useBoardStore = create<BoardStore>()(
       },
       moveColumn: (columnId: string, toIndex: number) => {
         set((state) => {
-          const index = state.columns.findIndex((c) => c.id === columnId);
-          if (index === -1 || toIndex === index) return {};
-          const updated = [...state.columns];
-          const [moved] = updated.splice(index, 1);
-          updated.splice(toIndex, 0, moved);
-          return { columns: updated };
+          const columnToMove = state.columns.find((c) => c.id === columnId);
+          if (!columnToMove) return {};
+
+          const fromIndex = columnToMove.index;
+          const boardId = columnToMove.boardId;
+
+          if (fromIndex === toIndex) return {};
+
+          const sameBoardColumns = state.columns
+            .filter((c) => c.boardId === boardId)
+            .sort((a, b) => a.index - b.index);
+
+          const filtered = sameBoardColumns.filter((c) => c.id !== columnId);
+
+          filtered.splice(toIndex, 0, columnToMove);
+
+          const reindexedSameBoard = filtered.map((col, idx) => ({
+            ...col,
+            index: idx,
+          }));
+
+          const finalColumns = state.columns.map((col) => {
+            if (col.boardId !== boardId) return col;
+            return reindexedSameBoard.find((c) => c.id === col.id)!;
+          });
+
+          return { columns: finalColumns };
         });
       },
-
       __syncState: (_state: AppState) => {
         set((state) => {
           return {

@@ -33,8 +33,10 @@ export const Board = () => {
   } = useBoardStore();
 
   const currentBoard = boards.find((b) => b.id === currentBoardId);
-  const boardColumns = columns.filter((col) => col.boardId === currentBoardId);
-
+  const boardColumns = columns
+    .filter((col) => col.boardId === currentBoardId)
+    .sort((item1, item2) => item1.index - item2.index);
+  console.log(boardColumns);
   const [addColumnPopupOpened, setAddColumnPopupOpened] =
     useState<boolean>(false);
 
@@ -99,25 +101,21 @@ export const Board = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={xAxisCollisionDetection}
-          onDragOver={(event: DragOverEvent) => {
-            if (
-              event.active.data.current?.type === "card" &&
-              event.over?.data.current?.type === "column" &&
-              event.active.data.current?.columnId !== event.over?.id
-            ) {
-              setCardDropFeedback({
-                columnId: event.over.id.toString(),
-                card: {
-                  title: "hey",
-                  columnId: "",
-                  id: "",
-                  description: "heeey",
-                },
-              });
-            } else {
-              setCardDropFeedback(null);
-            }
-          }}
+          // onDragOver={(event: DragOverEvent) => {
+          //   if (
+          //     event.active.data.current?.type === "card" &&
+          //     event.over?.data.current?.type === "column" &&
+          //     event.active.data.current?.columnId !== event.over?.id
+          //   ) {
+          //     const card = event.active.data.current?.card;
+          //     setCardDropFeedback({
+          //       columnId: event.over.id.toString(),
+          //       card,
+          //     });
+          //   } else {
+          //     setCardDropFeedback(null);
+          //   }
+          // }}
           onDragEnd={(event: DragEndEvent) => {
             setCardDropFeedback(null);
             if (
@@ -137,12 +135,12 @@ export const Board = () => {
               const overIndex = boardColumns.findIndex(
                 (c) => c.id === event.over?.id
               );
+
               if (activeIndex !== -1 && overIndex !== -1) {
                 moveColumn(event.active.id as string, overIndex);
               }
             }
           }}
-          onDragMove={(e) => console.log(e.over)}
         >
           <SortableContext
             items={boardColumns.map((c) => c.id)}
