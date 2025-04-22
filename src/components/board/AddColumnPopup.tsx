@@ -1,8 +1,13 @@
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
-import { FormEvent } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { AnimatedPopup, AnimatedPopupProps } from "../animation/AnimatedPopup";
+import { useForm } from "react-hook-form";
+import {
+  maxLength,
+  required,
+} from "@/lib/react-hook-form/validations/validations";
+import { useEffect } from "react";
 
 interface AddColumnPopupProps extends AnimatedPopupProps {
   onClose: () => void;
@@ -18,6 +23,25 @@ export default function AddColumnPopup({
   initialColumnName,
   popupTitle = "New Column",
 }: Partial<AddColumnPopupProps>) {
+  type CreateColumnProps = {
+    title: string;
+  };
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateColumnProps>();
+
+  const onSubmit = (data: CreateColumnProps) => {
+    onAddColumn?.(data.title);
+  };
+
+  useEffect(() => {
+    if (!isShown) reset();
+  }, [isShown]);
+
   return (
     <AnimatedPopup isShown={isShown}>
       <Card className="p-0">
@@ -28,22 +52,19 @@ export default function AddColumnPopup({
               Close
             </Button>
           </div>
-          <form
-            onSubmit={(e: FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const name = formData.get("name");
-              if (!name) return;
-              onAddColumn?.(name.toString());
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
               defaultValue={initialColumnName}
-              name="name"
+              {...register("title", {
+                ...required(),
+                ...maxLength(20),
+              })}
               type="text"
-              placeholder="Name"
+              placeholder="Title"
             />
+            {errors.title && (
+              <p className="text-sm text-red-500">{errors.title.message}</p>
+            )}
             <Button type="submit" className="w-full">
               Confirm
             </Button>

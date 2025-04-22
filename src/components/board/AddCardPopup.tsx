@@ -1,16 +1,27 @@
-import { FormEvent } from "react";
 import { AnimatedPopup, AnimatedPopupProps } from "../animation/AnimatedPopup";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
+  maxLength,
+  required,
+} from "@/lib/react-hook-form/validations/validations";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+
+type CreateCardProps = {
+  title: string;
+  description?: string;
+};
 
 interface AddCardPopupProps extends AnimatedPopupProps {
-  onAddCard: (title: string, description: string) => void;
+  onAddCard: (title: string, description?: string) => void;
   onClose: () => void;
   titleInitialValue: string;
   popupTitle: string;
   descriptionInitialValue: string;
 }
+
 export default function AddCardPopup({
   isShown,
   onClose,
@@ -19,6 +30,21 @@ export default function AddCardPopup({
   titleInitialValue,
   descriptionInitialValue,
 }: Partial<AddCardPopupProps>) {
+  const {
+    handleSubmit,
+    register,
+    reset,
+    formState: { errors },
+  } = useForm<CreateCardProps>();
+
+  const onSubmit = (card: CreateCardProps) => {
+    onAddCard?.(card.title, card.description);
+  };
+
+  useEffect(() => {
+    if (!isShown) reset();
+  }, [isShown]);
+
   return (
     <AnimatedPopup isShown={isShown}>
       <Card className="p-0">
@@ -29,29 +55,27 @@ export default function AddCardPopup({
               Close
             </Button>
           </div>
-          <form
-            onSubmit={(e: FormEvent<HTMLFormElement>) => {
-              e.preventDefault();
-              const formData = new FormData(e.currentTarget);
-              const title = formData.get("title");
-              const description = formData.get("description");
-              if (!title || !description) return;
-              onAddCard?.(title.toString(), description.toString());
-            }}
-            className="space-y-4"
-          >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
               defaultValue={titleInitialValue}
-              name="title"
+              {...register("title", { ...required(), ...maxLength(15) })}
               type="text"
               placeholder="Title"
             />
+            {errors.title && (
+              <p className="text-sm text-red-500">{errors.title.message}</p>
+            )}
             <Input
               defaultValue={descriptionInitialValue}
-              name="description"
+              {...register("description", { ...maxLength(20) })}
               type="text"
               placeholder="Description"
             />
+            {errors.description && (
+              <p className="text-sm text-red-500">
+                {errors.description.message}
+              </p>
+            )}
             <Button type="submit" className="w-full">
               Confirm
             </Button>

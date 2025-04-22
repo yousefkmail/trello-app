@@ -26,6 +26,7 @@ export interface CardActions {
 export interface BoardActions {
   addBoard: (title: string) => void;
   removeBoard: (boardId: string) => void;
+  updateBoard: (boardId: string, board: Partial<Board>) => void;
   __syncState: (state: AppState) => void;
   setCurrentBoard: (id: string) => void;
 }

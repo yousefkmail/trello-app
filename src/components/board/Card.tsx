@@ -18,6 +18,7 @@ export const Card = ({ card }: { card: CardModel }) => {
     setNodeRef,
     transform,
     transition,
+
     isDragging,
   } = useSortable({
     id: card.id,
@@ -33,6 +34,7 @@ export const Card = ({ card }: { card: CardModel }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+    cursor: isDragging ? "grabbing" : "auto",
   };
 
   return (

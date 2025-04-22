@@ -16,7 +16,6 @@ function Index() {
       ? document.body.classList.add("dark")
       : document.body.classList.remove("dark");
   }, [enabled]);
-
   return (
     <div className="bg-background">
       <div className="border-b-4 flex justify-between py-2 px-4">

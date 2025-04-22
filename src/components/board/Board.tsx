@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useBoardStore } from "../../stores/boardStore/useBoardStore";
 import { Column } from "./Column";
 import { Button } from "@/components/ui/button";
+import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import {
-  horizontalListSortingStrategy,
-  SortableContext,
-} from "@dnd-kit/sortable";
-import {
+  closestCenter,
   DndContext,
   DragEndEvent,
   PointerSensor,
@@ -16,16 +14,16 @@ import {
 import AddColumnPopup from "./AddColumnPopup";
 
 import { ConfirmDialog } from "../utils/ConfirmDialog";
-import { xAxisCollisionDetection } from "@/lib/dnd-kit/XAxisCollisionDetection";
 import { useBoardStoreCommand } from "@/CommandManager/useBoardStoreCommand";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import AddBoardPopup from "./AddBoardPopup";
 
 export const Board = () => {
-  const { boards, columns, currentBoardId, moveColumn, removeBoard } =
-    useBoardStore();
+  const { boards, columns, currentBoardId, removeBoard } = useBoardStore();
 
-  const { addColumn } = useBoardStoreCommand();
-
-  const { moveCard } = useBoardStoreCommand();
+  const { addColumn, moveCard, updateBoard, moveColumn } =
+    useBoardStoreCommand();
 
   const currentBoard = boards.find((b) => b.id === currentBoardId);
   const boardColumns = columns
@@ -35,7 +33,7 @@ export const Board = () => {
     useState<boolean>(false);
 
   const [showConfirm, setShowConfirm] = useState<boolean>(false);
-
+  const [updateBoardOpened, setUpdatedBoardOpened] = useState<boolean>(false);
   const handleDelete = () => {
     if (!currentBoardId) return;
     removeBoard(currentBoardId);
@@ -60,9 +58,18 @@ export const Board = () => {
     <div className="p-4">
       <div className="flex justify-between">
         <div className="mb-4">
-          <h1 className="text-2xl font-bold mb-4 overflow-hidden mr-4 text-foreground">
-            {currentBoard?.title}
-          </h1>
+          <div className="flex items-center  mb-4">
+            <h1 className="text-2xl font-bold  mr-4 overflow-hidden  text-foreground">
+              {currentBoard?.title}
+            </h1>
+            <div
+              onClick={() => setUpdatedBoardOpened(true)}
+              className="inline-flex cursor-pointer hover:bg-muted p-1 rounded-full text-accent"
+            >
+              <FontAwesomeIcon size="lg" icon={faPencil} />
+            </div>
+          </div>
+
           <div>
             <Button
               onClick={() => setAddColumnPopupOpened(true)}
@@ -97,7 +104,7 @@ export const Board = () => {
       <div className="flex gap-4 pb-2 overflow-visible">
         <DndContext
           sensors={sensors}
-          collisionDetection={xAxisCollisionDetection}
+          collisionDetection={closestCenter}
           onDragEnd={(event: DragEndEvent) => {
             if (
               event.active.data.current?.type === "card" &&
@@ -121,18 +128,20 @@ export const Board = () => {
               );
 
               if (activeIndex !== -1 && overIndex !== -1) {
-                moveColumn(event.active.id as string, overIndex);
+                moveColumn(event.active.data.current.column, overIndex);
               }
             }
           }}
         >
           <SortableContext
             items={boardColumns.map((c) => c.id)}
-            strategy={horizontalListSortingStrategy}
+            strategy={rectSortingStrategy}
           >
-            {boardColumns.map((column) => (
-              <Column key={column.id} column={column} />
-            ))}
+            <div className="flex flex-wrap gap-4 ">
+              {boardColumns.map((column) => (
+                <Column key={column.id} column={column} />
+              ))}
+            </div>
           </SortableContext>
         </DndContext>
 
@@ -144,6 +153,17 @@ export const Board = () => {
           onAddColumn={(name) => {
             addColumn(name);
             setAddColumnPopupOpened(false);
+          }}
+        />
+
+        <AddBoardPopup
+          isShown={updateBoardOpened}
+          onClose={() => setUpdatedBoardOpened(false)}
+          popupTitle="Update Board"
+          titleInitialValue={currentBoard?.title}
+          onCreateBoard={(boardName) => {
+            updateBoard({ title: boardName, id: currentBoardId });
+            setUpdatedBoardOpened(false);
           }}
         />
       </div>

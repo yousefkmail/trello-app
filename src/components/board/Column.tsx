@@ -16,15 +16,14 @@ import { Card as ShadcnCard } from "../ui/card";
 
 export const Column = ({
   column,
-  cardDropFeedback,
 }: {
   column: ColumnModel;
   cardDropFeedback?: CardModel;
 }) => {
   const [addCardPopupOpened, setAddCardPopupOpened] = useState<boolean>(false);
 
-  const { cards, updateColumn, deleteColumn } = useBoardStore();
-  const { addCard } = useBoardStoreCommand();
+  const { cards } = useBoardStore();
+  const { addCard, deleteColumn, updateColumn } = useBoardStoreCommand();
   const columnCards = cards.filter((card) => card.columnId === column.id);
 
   const [updateColumnPopupOpened, setUpdateColumnPopupOpened] =
@@ -41,6 +40,7 @@ export const Column = ({
     id: column.id,
     data: {
       type: "column",
+      column,
     },
   });
 
@@ -60,6 +60,7 @@ export const Column = ({
     transition,
     opacity: isDragging ? 0.5 : 1,
     zIndex: isDragging ? 50 : "auto",
+    cursor: isDragging ? "grabbing" : "auto",
   };
 
   return (
@@ -67,22 +68,22 @@ export const Column = ({
       <ShadcnCard
         style={style}
         ref={setNodeRef}
-        className="w-64 p-3 rounded-lg flex flex-col gap-2 min-h-[200px] group relative"
+        className="w-64 p-3 rounded-lg flex flex-col gap-2 min-h-[200px] relative"
       >
         <div
           {...attributes}
           {...listeners}
           className="flex justify-between items-start cursor-move"
         >
-          <h2 className="font-semibold text-lg overflow-hidden text-foreground">
+          <h2 className="font-semibold text-lg overflow-hidden text-foreground select-none">
             {column.title}
           </h2>
 
-          <div className="min-w-12 flex gap-2">
+          <div className="flex ">
             <Button
               variant="destructive"
               onClick={() => setDeleteColumnPopup(true)}
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 mr-2"
             >
               <FontAwesomeIcon icon={faTrash} className="h-4 w-4" />
             </Button>
@@ -100,7 +101,6 @@ export const Column = ({
           {columnCards.map((card) => (
             <Card key={card.id} card={card} />
           ))}
-          {cardDropFeedback && <Card card={cardDropFeedback} />}
         </div>
         <Button
           onClick={() => setAddCardPopupOpened(true)}
@@ -125,7 +125,12 @@ export const Column = ({
         popupTitle="Update column."
         onClose={() => setUpdateColumnPopupOpened(false)}
         onAddColumn={(title) => {
-          updateColumn(column.id, { title });
+          updateColumn({
+            boardId: column.boardId,
+            id: column.id,
+            title,
+            index: column.index,
+          });
           setUpdateColumnPopupOpened(false);
         }}
         initialColumnName={column.title}
@@ -134,7 +139,7 @@ export const Column = ({
       <ConfirmDialog
         open={deleteColumnPopup}
         onConfirm={() => {
-          deleteColumn(column.id);
+          deleteColumn(column);
         }}
         onCancel={() => setDeleteColumnPopup(false)}
         title="Delete this column?"

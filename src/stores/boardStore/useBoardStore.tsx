@@ -24,6 +24,16 @@ export const useBoardStore = create<BoardStore>()(
         }));
       },
 
+      updateBoard: (boardId: string, board: Partial<Board>) => {
+        set((state) => {
+          return {
+            boards: state.boards.map((oldBoard) =>
+              oldBoard.id === boardId ? { ...oldBoard, ...board } : oldBoard
+            ),
+          };
+        });
+      },
+
       setCurrentBoard: (id: string) => {
         set({ currentBoardId: id });
       },

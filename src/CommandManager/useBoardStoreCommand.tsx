@@ -8,12 +8,22 @@ import { DeleteCardCommand } from "./Commands/DeleteCardCommand";
 import { MoveCardCommand } from "./Commands/MoveCardCommand";
 import { AddColumnCommand } from "./Commands/AddColumnCommand";
 import { AddCardCommand } from "./Commands/AddCardCommand";
+import { DeleteColumnCommand } from "./Commands/DeleteColumnCommand";
+import { Column } from "@/types/Column";
+import { UpdateColumnCommand } from "./Commands/UpdateColumnCommand";
+import { Board } from "@/types/Board";
+import { UpdateBoardCommand } from "./Commands/UpdateBoardCommand";
+import { MoveColumnCommand } from "./Commands/MoveColumnCommand";
 
 export const commandManager = new CommandManager();
 
 export const useBoardStoreCommand = () => {
   const addBoard = (title: string) => {
     ExecuteCommand(AddBoardCommand(title, useBoardStore));
+  };
+
+  const addCard = (title: string, columnId: string, description?: string) => {
+    ExecuteCommand(AddCardCommand(title, columnId, useBoardStore, description));
   };
 
   const updateCard = (card: Card) => {
@@ -32,8 +42,20 @@ export const useBoardStoreCommand = () => {
     ExecuteCommand(AddColumnCommand(title, useBoardStore));
   };
 
-  const addCard = (title: string, columnId: string, description?: string) => {
-    ExecuteCommand(AddCardCommand(title, columnId, useBoardStore, description));
+  const deleteColumn = (column: Column) => {
+    ExecuteCommand(DeleteColumnCommand(column, useBoardStore));
+  };
+
+  const updateColumn = (column: Column) => {
+    ExecuteCommand(UpdateColumnCommand(column, useBoardStore));
+  };
+
+  const moveColumn = (column: Column, toIndex: number) => {
+    ExecuteCommand(MoveColumnCommand(column, toIndex, useBoardStore));
+  };
+
+  const updateBoard = (board: Board) => {
+    ExecuteCommand(UpdateBoardCommand(board, useBoardStore));
   };
 
   const ExecuteCommand = (command: Command) => {
@@ -49,5 +71,9 @@ export const useBoardStoreCommand = () => {
     moveCard,
     addColumn,
     addCard,
+    deleteColumn,
+    updateColumn,
+    updateBoard,
+    moveColumn,
   };
 };
