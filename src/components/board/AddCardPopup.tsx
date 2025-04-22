@@ -58,7 +58,7 @@ export default function AddCardPopup({
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <Input
               defaultValue={titleInitialValue}
-              {...register("title", { ...required(), ...maxLength(15) })}
+              {...register("title", { ...required(), ...maxLength(30) })}
               type="text"
               placeholder="Title"
             />
@@ -67,7 +67,7 @@ export default function AddCardPopup({
             )}
             <Input
               defaultValue={descriptionInitialValue}
-              {...register("description", { ...maxLength(20) })}
+              {...register("description", { ...maxLength(100) })}
               type="text"
               placeholder="Description"
             />

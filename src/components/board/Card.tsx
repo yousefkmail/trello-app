@@ -34,7 +34,7 @@ export const Card = ({ card }: { card: CardModel }) => {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
-    cursor: isDragging ? "grabbing" : "auto",
+    cursor: isDragging ? "grabbing" : "move",
   };
 
   return (
@@ -44,7 +44,7 @@ export const Card = ({ card }: { card: CardModel }) => {
         style={style}
         {...attributes}
         {...listeners}
-        className="p-3  rounded shadow cursor-move group overflow-hidden border transition-colors bg-background"
+        className="p-3  rounded shadow cursor-move group overflow-hidden border transition-colors bg-background cursor-move"
       >
         <div className="flex justify-between items-center">
           <h3 className="font-medium text-foreground overflow-hidden">
